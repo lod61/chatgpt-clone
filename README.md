@@ -24,7 +24,7 @@
 
 1. 克隆项目
 ```bash
-git clone <repository-url>
+git clone https://github.com/lod61/chatgpt-clone.git
 cd chatgpt-clone
 ```
 
@@ -83,7 +83,6 @@ src/
 
 - 刷新页面会清空对话历史
 - API 请求可能受到速率限制
-- 移动端某些特殊情况下的布局问题
 
 ## 后续优化计划
 
@@ -105,3 +104,51 @@ src/
 ## 许可证
 
 [MIT License](LICENSE)
+
+## 部署方案
+
+### 1. Vercel 部署（推荐）
+最简单的部署方式，自动构建和部署：
+
+1. Fork 本项目到你的 GitHub
+2. 在 Vercel 中导入该仓库
+3. 设置环境变量 `VITE_OPENROUTER_API_KEY`
+4. 完成部署
+
+### 2. Docker 部署
+```bash
+# 构建镜像
+docker build -t chatgpt-clone .
+
+# 运行容器
+docker run -d -p 3000:80 \
+  -e VITE_OPENROUTER_API_KEY=your_api_key \
+  chatgpt-clone
+```
+
+### 3. 静态托管
+构建后可部署到任何静态托管服务：
+
+```bash
+# 构建项目
+npm run build
+
+# 生成的 dist 目录可部署到：
+- GitHub Pages
+- Nginx
+- Apache
+- Netlify
+- Cloudflare Pages
+```
+
+### 4. Node.js 环境部署
+```bash
+# 安装依赖
+npm install
+
+# 构建
+npm run build
+
+# 使用 serve 等工具启动
+npx serve dist
+```
