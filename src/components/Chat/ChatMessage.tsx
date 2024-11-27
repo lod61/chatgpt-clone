@@ -63,9 +63,7 @@ const ChatMessage = memo(({ message, onEdit }: ChatMessageProps) => {
     <Box
       sx={{
         width: "100%",
-        bgcolor: isUser ? "#343541" : "#444654",
-        borderBottom: "1px solid",
-        borderColor: "rgba(255,255,255,0.1)",
+        bgcolor: "#FFFFFF",
         position: "relative",
         "&:hover": {
           "& .edit-button": {
@@ -79,23 +77,28 @@ const ChatMessage = memo(({ message, onEdit }: ChatMessageProps) => {
           maxWidth: "48rem",
           mx: "auto",
           display: "flex",
-          gap: { xs: 2, sm: 3 },
+          gap: { xs: 3, sm: 4 },
           py: { xs: 4, sm: 6 },
-          px: { xs: 3, sm: 4, md: 8, lg: 10 },
+          px: { xs: 4, sm: 6, md: 10, lg: 12 },
         }}
       >
-        <Avatar
-          sx={{
-            width: 30,
-            height: 30,
-            bgcolor: isUser ? "#5436DA" : "#19c37d",
-            flexShrink: 0,
-          }}
-        >
-          {isUser ? <Person /> : <SmartToy />}
-        </Avatar>
+        <Box sx={{ width: 30, flexShrink: 0 }}>
+          <Avatar
+            sx={{
+              width: 30,
+              height: 30,
+              bgcolor: isUser ? "#FDD633" : "#19C37D",
+              color: isUser ? "#000000" : "#FFFFFF",
+            }}
+          >
+            {isUser ? <Person /> : <SmartToy />}
+          </Avatar>
+        </Box>
 
         <Box sx={{ flex: 1, position: "relative", minWidth: 0 }}>
+          <Box sx={{ mb: 1, color: "#000000", fontWeight: 600 }}>
+            {isUser ? "You" : "ChatGPT"}
+          </Box>
           {isEditing ? (
             <Box
               component="form"
@@ -140,57 +143,70 @@ const ChatMessage = memo(({ message, onEdit }: ChatMessageProps) => {
             <>
               <Box
                 sx={{
-                  color: "#ECECF1",
+                  color: "#000000",
                   fontSize: "1rem",
                   lineHeight: 1.75,
+                  whiteSpace: "pre-wrap",
                   "& p": {
-                    mb: 2,
-                    "&:last-child": {
-                      mb: 0,
+                    my: 0,
+                    "&:not(:last-child)": {
+                      mb: 2,
                     },
                   },
-                  "& a": {
-                    color: "#7C7CFF",
-                    textDecoration: "underline",
-                    "&:hover": {
-                      color: "#5C5CFF",
+                  "& ol": {
+                    my: 2,
+                    pl: 2,
+                    counterReset: "item",
+                    listStyle: "none",
+                    "& li": {
+                      counterIncrement: "item",
+                      display: "flex",
+                      "&::before": {
+                        content: 'counter(item) "."',
+                        fontWeight: 600,
+                        minWidth: "1.5em",
+                      },
                     },
                   },
-                  "& ul, & ol": {
-                    pl: 4,
-                    mb: 2,
+                  "& ul": {
+                    my: 2,
+                    pl: 2,
                   },
                   "& li": {
-                    mb: 1,
+                    mb: 0.5,
+                  },
+                  "& a": {
+                    color: "#3B3B3B",
+                    textDecoration: "underline",
+                    "&:hover": {
+                      color: "#1A1A1A",
+                    },
                   },
                   "& blockquote": {
-                    borderLeft: 3,
-                    borderColor: "rgba(255,255,255,0.2)",
-                    pl: 2,
-                    ml: 0,
-                    color: "rgba(236,236,241,0.8)",
-                  },
-                  "& table": {
-                    width: "100%",
-                    borderCollapse: "collapse",
                     my: 2,
-                    "& th, & td": {
-                      border: 1,
-                      borderColor: "rgba(255,255,255,0.2)",
-                      p: 1,
-                    },
-                    "& th": {
-                      bgcolor: "rgba(255,255,255,0.1)",
-                      fontWeight: "bold",
+                    pl: 2,
+                    borderLeft: "3px solid rgba(0,0,0,0.2)",
+                    color: "rgba(0,0,0,0.7)",
+                  },
+                  "& code": {
+                    fontFamily: "monospace",
+                    backgroundColor: "rgba(0,0,0,0.1)",
+                    padding: "2px 4px",
+                    borderRadius: "4px",
+                    fontSize: "0.875em",
+                  },
+                  "& pre": {
+                    my: 2,
+                    p: 0,
+                    "& code": {
+                      p: 0,
+                      backgroundColor: "transparent",
                     },
                   },
                 }}
               >
                 {isUser ? (
-                  <Typography
-                    component="div"
-                    sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-                  >
+                  <Typography component="div">
                     {message.content}
                   </Typography>
                 ) : (
@@ -208,8 +224,8 @@ const ChatMessage = memo(({ message, onEdit }: ChatMessageProps) => {
                     component="span"
                     sx={{
                       display: "inline-block",
-                      width: "0.5em",
-                      height: "1em",
+                      width: "6px",
+                      height: "16px",
                       bgcolor: "#ECECF1",
                       ml: 0.5,
                       animation: "blink 1s infinite",
@@ -235,8 +251,8 @@ const ChatMessage = memo(({ message, onEdit }: ChatMessageProps) => {
                     color: "rgba(255,255,255,0.6)",
                     "&:hover": {
                       color: "rgba(255,255,255,0.9)",
+                      backgroundColor: "rgba(255,255,255,0.1)",
                     },
-                    zIndex: 10,
                   }}
                 >
                   <Edit fontSize="small" />

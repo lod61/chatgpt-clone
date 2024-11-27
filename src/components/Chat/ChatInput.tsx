@@ -42,8 +42,8 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
           bottom: 0,
           left: 0,
           right: 0,
-          padding: { xs: "8px 8px 8px 8px", sm: "8px" },
-          backgroundColor: "#343541",
+          padding: { xs: "8px 8px 24px", sm: "8px 8px 24px" },
+          background: "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%)",
           zIndex: 1000,
         }}
       >
@@ -54,18 +54,18 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
             maxWidth: "48rem",
             margin: "0 auto",
             position: "relative",
-            backgroundColor: "#40414F",
-            border: "1px solid rgba(32,33,35,0.5)",
+            backgroundColor: "#FFFFFF",
+            border: "1px solid rgba(0,0,0,0.1)",
             borderRadius: "0.75rem",
-            boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+            boxShadow: "0 0 10px rgba(0,0,0,0.1)",
             padding: { xs: "8px", sm: "10px" },
             transition: "border-color 0.15s ease",
             "&:hover": {
-              borderColor: "rgba(32,33,35,0.8)",
+              borderColor: "rgba(0,0,0,0.2)",
             },
             "&:focus-within": {
-              borderColor: "#2C2D35",
-              boxShadow: "0 0 15px rgba(0,0,0,0.2)",
+              borderColor: "#10A37F",
+              boxShadow: "0 0 0 1px #10A37F",
             },
           }}
         >
@@ -75,8 +75,8 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
             maxRows={8}
             placeholder={
               isGenerating
-                ? "AI 正在回答中，您可以继续输入..."
-                : "输入消息，按 Enter 发送，Shift + Enter 换行，按 / 聚焦"
+                ? "继续输入..."
+                : "输入消息，按 Enter 发送，Shift + Enter 换行"
             }
             disabled={disabled}
             value={input}
@@ -87,30 +87,18 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
               minHeight: "24px",
               maxHeight: { xs: "150px", sm: "200px" },
               padding: "0 40px 0 10px",
-              color: "#ECECF1",
+              color: "#1A1A1A",
               fontSize: { xs: "0.875rem", sm: "1rem" },
               lineHeight: 1.5,
               backgroundColor: "transparent",
+              fontFamily: "inherit",
               "& .MuiInputBase-input": {
                 padding: 0,
                 "&::placeholder": {
-                  color: "rgba(236,236,241,0.6)",
+                  color: "rgba(0,0,0,0.4)",
                   opacity: 1,
                   fontSize: { xs: "0.875rem", sm: "1rem" },
                 },
-              },
-              "& .MuiInputBase-root": {
-                padding: 0,
-                "&::before, &::after": {
-                  display: "none",
-                },
-              },
-              "& .MuiInputAdornment-root": {
-                display: "none",
-              },
-              "& > *": {
-                margin: 0,
-                padding: 0,
               },
             }}
           />
@@ -122,18 +110,14 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
               right: { xs: "8px", sm: "10px" },
               top: "50%",
               transform: "translateY(-50%)",
-              padding: { xs: "2px", sm: "4px" },
-              color: isGenerating
-                ? "primary.main"
-                : disabled || !input.trim()
-                ? "rgba(255,255,255,0.3)"
-                : "#ECECF1",
+              padding: { xs: "4px", sm: "6px" },
+              color: disabled || !input.trim() ? "rgba(0,0,0,0.2)" : "#10A37F",
               "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.1)",
+                backgroundColor: "rgba(16,163,127,0.1)",
               },
             }}
           >
-            <Send fontSize="small" />
+            <Send sx={{ fontSize: 18 }} />
           </IconButton>
         </Box>
       </Box>

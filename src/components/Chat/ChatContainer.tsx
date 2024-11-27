@@ -13,7 +13,6 @@ export default function ChatContainer() {
   const { apiKey, error, isValidating, validateApiKey, clearApiKey } =
     useApiKey();
   const [showApiKeyInput, setShowApiKeyInput] = useState(!apiKey);
-  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -66,7 +65,6 @@ export default function ChatContainer() {
       abortControllerRef.current?.abort();
       abortControllerRef.current = null;
       setIsGenerating(false);
-      setIsLoading(false);
       setMessages((prev) =>
         prev.filter(
           (msg, index, arr) =>
@@ -94,7 +92,6 @@ export default function ChatContainer() {
 
       (async () => {
         setIsGenerating(true);
-        setIsLoading(true);
 
         abortControllerRef.current = new AbortController();
 
@@ -117,7 +114,6 @@ export default function ChatContainer() {
           }
         } finally {
           setIsGenerating(false);
-          setIsLoading(false);
           abortControllerRef.current = null;
           inputRef.current?.focus();
         }
@@ -157,7 +153,7 @@ export default function ChatContainer() {
     newMessages.splice(index + 1);
     const aiMessage: Message = { role: "assistant", content: "" };
     setMessages((_prev) => [...newMessages, aiMessage]);
-    setIsLoading(true);
+    setIsGenerating(true);
 
     abortControllerRef.current = new AbortController();
 
@@ -178,7 +174,7 @@ export default function ChatContainer() {
         }
       }
     } finally {
-      setIsLoading(false);
+      setIsGenerating(false);
       abortControllerRef.current = null;
       inputRef.current?.focus();
     }
@@ -190,7 +186,7 @@ export default function ChatContainer() {
         height: "100vh",
         display: "flex",
         flexDirection: "column",
-        bgcolor: "#343541",
+        bgcolor: "#FFFFFF",
         position: "relative",
       }}
     >
@@ -213,23 +209,27 @@ export default function ChatContainer() {
           onClick={() => setShowApiKeyInput(true)}
           sx={{
             position: "absolute",
-            top: 16,
-            right: 16,
-            color: "#ECECF1",
+            top: 12,
+            right: 12,
+            color: "#1A1A1A",
+            padding: "6px",
+            "&:hover": {
+              backgroundColor: "rgba(0,0,0,0.04)",
+            },
           }}
         >
-          <SettingsIcon />
+          <SettingsIcon sx={{ fontSize: 20 }} />
         </IconButton>
       )}
-      {isLoading && (
+      {isGenerating && (
         <Box
           sx={{
-            position: "fixed",
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
-            height: 2,
-            bgcolor: "primary.main",
+            height: "4px",
+            bgcolor: "#19C37D",
             zIndex: 9999,
             animation: "progress 1s infinite linear",
             "@keyframes progress": {

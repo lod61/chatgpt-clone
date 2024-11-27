@@ -5,16 +5,19 @@ import MainLayout from "./components/Layout/MainLayout";
 function App() {
   const theme = createTheme({
     palette: {
-      mode: "dark",
+      mode: "light",
       background: {
-        default: "#343541",
-        paper: "#343541",
+        default: "#FFFFFF",
+        paper: "#FFFFFF",
       },
       text: {
-        primary: "#ECECF1",
-        secondary: "#C5C5D2",
+        primary: "#1A1A1A",
+        secondary: "#6B6B6B",
       },
-      divider: "rgba(255,255,255,0.1)",
+      divider: "rgba(0,0,0,0.1)",
+    },
+    typography: {
+      fontFamily: 'Söhne,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,"Noto Color Emoji"',
     },
   });
 
