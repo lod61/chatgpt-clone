@@ -7,8 +7,5 @@
   "outputDirectory": "dist",
   "github": {
     "silent": true
-  },
-  "comments": {
-    "enabled": false
   }
 }
