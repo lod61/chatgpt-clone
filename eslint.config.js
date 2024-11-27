@@ -1,13 +1,19 @@
 import eslint from "@eslint/js";
 import tseslint from "@typescript-eslint/eslint-plugin";
 import typescript from "@typescript-eslint/parser";
-import reactHooks from "eslint-plugin-react-hooks";
 import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 
 export default [
   eslint.configs.recommended,
   {
     files: ["**/*.{ts,tsx}"],
+    ignores: [
+      "vite.config.ts",
+      "dist/**/*",
+      "build/**/*",
+      "node_modules/**/*"
+    ],
     languageOptions: {
       parser: typescript,
       parserOptions: {
@@ -16,6 +22,8 @@ export default [
         ecmaFeatures: {
           jsx: true,
         },
+        project: "./tsconfig.json",
+        tsconfigRootDir: ".",
       },
       globals: {
         window: "readonly",

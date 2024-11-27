@@ -1,6 +1,21 @@
-node_modules
-dist
-build
-coverage
+# 构建文件
+dist/
+build/
+*.min.js
+
+# 依赖
+node_modules/
+
+# 配置文件
+vite.config.ts
+*.config.js
+
+# 类型声明
 *.d.ts
-vite.config.ts 
+
+# 其他
+coverage/
+.vscode/
+.idea/
+.DS_Store
+ 

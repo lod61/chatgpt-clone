@@ -1,14 +1,12 @@
-import React, { forwardRef } from "react";
-import { Box, IconButton, InputBase } from "@mui/material";
 import { Send } from "@mui/icons-material";
+import { Box, IconButton, InputBase } from "@mui/material";
+import React, { forwardRef } from "react";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
   disabled?: boolean;
   isGenerating?: boolean;
 }
-
-type KeyboardEventElement = HTMLInputElement | HTMLDivElement;
 
 const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
   ({ onSend, disabled, isGenerating }, ref) => {
@@ -25,7 +23,9 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
       }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<KeyboardEventElement>) => {
+    const handleKeyDown = (
+      e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
       if (e.key === "Enter" && !e.shiftKey && !disabled) {
         e.preventDefault();
         if (input.trim()) {

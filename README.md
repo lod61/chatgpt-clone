@@ -23,17 +23,20 @@
 ## 本地运行
 
 1. 克隆项目
+
 ```bash
 git clone https://github.com/lod61/chatgpt-clone.git
 cd chatgpt-clone
 ```
 
 2. 安装依赖
+
 ```bash
 npm install
 ```
 
 3. 启动开发服务器
+
 ```bash
 npm run dev
 ```
@@ -43,11 +46,13 @@ npm run dev
 ## 使用说明
 
 1. 首次使用需要配置 OpenRouter API key
+
    - 访问 [OpenRouter](https://openrouter.ai/keys) 获取 API key
    - 点击界面右上角的设置图标
    - 输入 API key 并保存
 
 2. 开始对话
+
    - 在底部输入框输入消息
    - 按回车键或点击发送按钮发送消息
    - 支持 Shift + Enter 换行
@@ -108,6 +113,7 @@ src/
 ## 部署方案
 
 ### 1. Vercel 部署（推荐）
+
 最简单的部署方式，自动构建和部署：
 
 1. Fork 本项目到你的 GitHub
@@ -116,6 +122,7 @@ src/
 4. 完成部署
 
 ### 2. Docker 部署
+
 ```bash
 # 构建镜像
 docker build -t chatgpt-clone .
@@ -127,6 +134,7 @@ docker run -d -p 3000:80 \
 ```
 
 ### 3. 静态托管
+
 构建后可部署到任何静态托管服务：
 
 ```bash
@@ -142,6 +150,7 @@ npm run build
 ```
 
 ### 4. Node.js 环境部署
+
 ```bash
 # 安装依赖
 npm install

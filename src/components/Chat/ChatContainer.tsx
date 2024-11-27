@@ -1,12 +1,12 @@
-import { useState, useRef, useCallback, useEffect } from "react";
-import { Box, IconButton } from "@mui/material";
-import { Settings as SettingsIcon } from "@mui/icons-material";
-import { Message } from "@/types/chat";
-import ChatHistory from "./ChatHistory";
-import ChatInput from "./ChatInput";
-import Settings from "../Settings/Settings";
 import { useApiKey } from "@/hooks/useApiKey";
 import { streamChat } from "@/services/api";
+import { Message } from "@/types/chat";
+import { Settings as SettingsIcon } from "@mui/icons-material";
+import { Box, IconButton } from "@mui/material";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Settings from "../Settings/Settings";
+import ChatHistory from "./ChatHistory";
+import ChatInput from "./ChatInput";
 
 export default function ChatContainer() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -142,7 +142,17 @@ export default function ChatContainer() {
     }
 
     const newMessages = [...messages];
-    newMessages[index] = { ...newMessages[index], content: newContent };
+    const originalMessage = newMessages[index];
+    
+    if (!originalMessage) {
+      console.error('Message not found at index:', index);
+      return;
+    }
+
+    newMessages[index] = {
+      role: originalMessage.role,
+      content: newContent
+    };
 
     newMessages.splice(index + 1);
     const aiMessage: Message = { role: "assistant", content: "" };

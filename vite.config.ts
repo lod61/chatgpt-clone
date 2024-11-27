@@ -1,20 +1,24 @@
-import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { fileURLToPath } from 'url'
-import { dirname, resolve } from 'path'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+import path from 'path'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/chatgpt-clone/',
   plugins: [react()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, './src'),
     },
   },
-  server: {
-    port: 3000,
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-markdown'],
+          'vendor-mui': ['@mui/material', '@mui/icons-material'],
+          'vendor-highlight': ['react-syntax-highlighter'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
   },
 }) 
