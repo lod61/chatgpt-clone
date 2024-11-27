@@ -32,16 +32,16 @@ cd chatgpt-clone
 2. 安装依赖
 
 ```bash
-npm install
+yarn
 ```
 
 3. 启动开发服务器
 
 ```bash
-npm run dev
+yarn dev
 ```
 
-4. 打开浏览器访问 http://localhost:3000
+4. 打开浏览器访问 http://localhost:5173
 
 ## 使用说明
 
@@ -128,7 +128,7 @@ src/
 docker build -t chatgpt-clone .
 
 # 运行容器
-docker run -d -p 3000:80 \
+docker run -d -p 5173:80 \
   -e VITE_OPENROUTER_API_KEY=your_api_key \
   chatgpt-clone
 ```
