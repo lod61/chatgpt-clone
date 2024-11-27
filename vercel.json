@@ -4,5 +4,11 @@
     { "src": "/.*", "dest": "/index.html" }
   ],
   "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "github": {
+    "silent": true
+  },
+  "comments": {
+    "enabled": false
+  }
 }

@@ -1,12 +1,11 @@
-import React, { memo, useState } from "react";
-import { Box, Typography, Avatar, TextField, IconButton } from "@mui/material";
 import { Message } from "@/types/chat";
-import { Person, SmartToy, Edit, Check, Close } from "@mui/icons-material";
+import { Check, Close, Edit, Person, SmartToy } from "@mui/icons-material";
+import { Avatar, Box, IconButton, TextField, Typography } from "@mui/material";
+import React, { ComponentType, memo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
-import { ComponentType } from "react";
 
 interface ChatMessageProps {
   message: Message;

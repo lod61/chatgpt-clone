@@ -1,7 +1,7 @@
 /// <reference types="react" />
 
 declare module 'react-markdown' {
-  import type { FC, ComponentType } from 'react'
+  import type { ComponentType, FC } from 'react'
   
   export interface ReactMarkdownProps {
     children: string
@@ -16,8 +16,8 @@ declare module 'react-markdown' {
 }
 
 declare module 'react-syntax-highlighter' {
-  import type { CSSProperties, ComponentType, ReactNode, Component } from 'react'
-  import type { JSX } from 'react/jsx-runtime'
+  import type { Component, ComponentType, CSSProperties, ReactNode } from 'react'
+    import type { JSX } from 'react/jsx-runtime'
   
   export interface SyntaxHighlighterProps {
     children: string

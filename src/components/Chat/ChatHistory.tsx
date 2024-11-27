@@ -1,6 +1,6 @@
-import { useRef, useEffect, memo } from "react";
-import { Box } from "@mui/material";
 import { Message } from "@/types/chat";
+import { Box } from "@mui/material";
+import { memo, useEffect, useRef } from "react";
 import ChatMessage from "./ChatMessage";
 
 interface ChatHistoryProps {
@@ -53,6 +53,7 @@ function ChatHistory({ messages, onEdit }: ChatHistoryProps) {
         overflowY: "auto",
         bgcolor: "#343541",
         position: "relative",
+        paddingBottom: { xs: "80px", sm: "100px" },
         "&::-webkit-scrollbar": {
           width: "6px",
           height: "6px",

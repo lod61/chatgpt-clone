@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import MainLayout from "./components/Layout/MainLayout";
 import ChatContainer from "./components/Chat/ChatContainer";
+import MainLayout from "./components/Layout/MainLayout";
 
 function App() {
   const theme = createTheme({

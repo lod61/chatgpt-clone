@@ -38,9 +38,13 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
     return (
       <Box
         sx={{
-          position: "relative",
-          padding: "8px",
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: { xs: "8px 8px 8px 8px", sm: "8px" },
           backgroundColor: "#343541",
+          zIndex: 1000,
         }}
       >
         <Box
@@ -54,7 +58,7 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
             border: "1px solid rgba(32,33,35,0.5)",
             borderRadius: "0.75rem",
             boxShadow: "0 0 15px rgba(0,0,0,0.1)",
-            padding: "10px",
+            padding: { xs: "8px", sm: "10px" },
             transition: "border-color 0.15s ease",
             "&:hover": {
               borderColor: "rgba(32,33,35,0.8)",
@@ -81,18 +85,32 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
             sx={{
               width: "100%",
               minHeight: "24px",
-              maxHeight: "200px",
+              maxHeight: { xs: "150px", sm: "200px" },
               padding: "0 40px 0 10px",
               color: "#ECECF1",
-              fontSize: "1rem",
-              lineHeight: "1.5",
+              fontSize: { xs: "0.875rem", sm: "1rem" },
+              lineHeight: 1.5,
               backgroundColor: "transparent",
               "& .MuiInputBase-input": {
                 padding: 0,
                 "&::placeholder": {
                   color: "rgba(236,236,241,0.6)",
                   opacity: 1,
+                  fontSize: { xs: "0.875rem", sm: "1rem" },
                 },
+              },
+              "& .MuiInputBase-root": {
+                padding: 0,
+                "&::before, &::after": {
+                  display: "none",
+                },
+              },
+              "& .MuiInputAdornment-root": {
+                display: "none",
+              },
+              "& > *": {
+                margin: 0,
+                padding: 0,
               },
             }}
           />
@@ -101,10 +119,10 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
             disabled={disabled || !input.trim()}
             sx={{
               position: "absolute",
-              right: "10px",
+              right: { xs: "8px", sm: "10px" },
               top: "50%",
               transform: "translateY(-50%)",
-              padding: "4px",
+              padding: { xs: "2px", sm: "4px" },
               color: isGenerating
                 ? "primary.main"
                 : disabled || !input.trim()
@@ -118,18 +136,6 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
             <Send fontSize="small" />
           </IconButton>
         </Box>
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "100%",
-            left: 0,
-            right: 0,
-            height: "32px",
-            background:
-              "linear-gradient(to bottom, rgba(52,53,65,0), rgba(52,53,65,1))",
-            pointerEvents: "none",
-          }}
-        />
       </Box>
     );
   }
