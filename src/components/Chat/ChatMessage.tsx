@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
+import { ComponentType } from "react";
 
 interface ChatMessageProps {
   message: Message;
@@ -66,6 +67,12 @@ const ChatMessage = memo(({ message, onEdit }: ChatMessageProps) => {
         bgcolor: isUser ? "#343541" : "#444654",
         borderBottom: "1px solid",
         borderColor: "rgba(255,255,255,0.1)",
+        position: "relative",
+        "&:hover": {
+          "& .edit-button": {
+            opacity: 1,
+          },
+        },
       }}
     >
       <Box
@@ -191,7 +198,7 @@ const ChatMessage = memo(({ message, onEdit }: ChatMessageProps) => {
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={{
-                      code: CodeBlock,
+                      code: CodeBlock as unknown as ComponentType<unknown>,
                     }}
                   >
                     {message.content}
@@ -215,7 +222,7 @@ const ChatMessage = memo(({ message, onEdit }: ChatMessageProps) => {
                   />
                 )}
               </Box>
-              {isUser && (
+              {isUser && onEdit && (
                 <IconButton
                   className="edit-button"
                   size="small"
@@ -230,6 +237,7 @@ const ChatMessage = memo(({ message, onEdit }: ChatMessageProps) => {
                     "&:hover": {
                       color: "rgba(255,255,255,0.9)",
                     },
+                    zIndex: 10,
                   }}
                 >
                   <Edit fontSize="small" />

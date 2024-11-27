@@ -5,11 +5,15 @@ import { Send } from "@mui/icons-material";
 interface ChatInputProps {
   onSend: (message: string) => void;
   disabled?: boolean;
+  isGenerating?: boolean;
 }
 
 const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
-  ({ onSend, disabled }, ref) => {
+  ({ onSend, disabled, isGenerating }, ref) => {
     const [input, setInput] = React.useState("");
+    const inputRef = React.useRef<HTMLInputElement>(null);
+
+    React.useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
@@ -19,7 +23,9 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
       }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const handleKeyDown = (
+      e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
       if (e.key === "Enter" && !e.shiftKey && !disabled) {
         e.preventDefault();
         if (input.trim()) {
@@ -33,10 +39,8 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
       <Box
         sx={{
           position: "relative",
-          p: { xs: 1, sm: 2, md: 4 },
-          bgcolor: "#343541",
-          borderTop: "1px solid",
-          borderColor: "rgba(255,255,255,0.1)",
+          padding: "8px",
+          backgroundColor: "#343541",
         }}
       >
         <Box
@@ -44,71 +48,75 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
           onSubmit={handleSubmit}
           sx={{
             maxWidth: "48rem",
-            mx: "auto",
+            margin: "0 auto",
             position: "relative",
+            backgroundColor: "#40414F",
+            border: "1px solid rgba(32,33,35,0.5)",
+            borderRadius: "0.75rem",
+            boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+            padding: "10px",
+            transition: "border-color 0.15s ease",
+            "&:hover": {
+              borderColor: "rgba(32,33,35,0.8)",
+            },
+            "&:focus-within": {
+              borderColor: "#2C2D35",
+              boxShadow: "0 0 15px rgba(0,0,0,0.2)",
+            },
           }}
         >
           <InputBase
-            ref={ref}
+            inputRef={inputRef}
             multiline
-            maxRows={5}
-            placeholder="输入消息，按 Enter 发送，Shift + Enter 换行，按 / 聚焦"
+            maxRows={8}
+            placeholder={
+              isGenerating
+                ? "AI 正在回答中，您可以继续输入..."
+                : "输入消息，按 Enter 发送，Shift + Enter 换行，按 / 聚焦"
+            }
             disabled={disabled}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: { xs: "0.75rem", sm: "1rem" },
-                bgcolor: "#40414f",
-                border: "1px solid rgba(255,255,255,0.1)",
-                "&:hover": {
-                  borderColor: "rgba(255,255,255,0.2)",
-                },
-                "&.Mui-focused": {
-                  borderColor: "rgba(255,255,255,0.3)",
-                },
-                "& fieldset": {
-                  border: "none",
-                },
-                "& textarea": {
-                  color: "#ECECF1",
-                  padding: {
-                    xs: "8px 40px 8px 12px",
-                    sm: "12px 45px 12px 16px",
-                  },
-                  fontSize: { xs: "0.875rem", sm: "1rem" },
-                  lineHeight: "1.5",
-                  "&::placeholder": {
-                    color: "rgba(236,236,241,0.5)",
-                    opacity: 1,
-                  },
+              width: "100%",
+              minHeight: "24px",
+              maxHeight: "200px",
+              padding: "0 40px 0 10px",
+              color: "#ECECF1",
+              fontSize: "1rem",
+              lineHeight: "1.5",
+              backgroundColor: "transparent",
+              "& .MuiInputBase-input": {
+                padding: 0,
+                "&::placeholder": {
+                  color: "rgba(236,236,241,0.6)",
+                  opacity: 1,
                 },
               },
             }}
-            InputProps={{
-              endAdornment: (
-                <IconButton
-                  type="submit"
-                  disabled={disabled || !input.trim()}
-                  sx={{
-                    position: "absolute",
-                    right: 8,
-                    bottom: 8,
-                    color:
-                      disabled || !input.trim()
-                        ? "rgba(255,255,255,0.3)"
-                        : "#ECECF1",
-                    "&:hover": {
-                      bgcolor: "rgba(255,255,255,0.1)",
-                    },
-                  }}
-                >
-                  <Send />
-                </IconButton>
-              ),
-            }}
           />
+          <IconButton
+            type="submit"
+            disabled={disabled || !input.trim()}
+            sx={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              padding: "4px",
+              color: isGenerating
+                ? "primary.main"
+                : disabled || !input.trim()
+                ? "rgba(255,255,255,0.3)"
+                : "#ECECF1",
+              "&:hover": {
+                backgroundColor: "rgba(255,255,255,0.1)",
+              },
+            }}
+          >
+            <Send fontSize="small" />
+          </IconButton>
         </Box>
         <Box
           sx={{
@@ -116,9 +124,9 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
             bottom: "100%",
             left: 0,
             right: 0,
-            height: "2rem",
+            height: "32px",
             background:
-              "linear-gradient(to bottom, transparent, rgba(52,53,65,0.9))",
+              "linear-gradient(to bottom, rgba(52,53,65,0), rgba(52,53,65,1))",
             pointerEvents: "none",
           }}
         />

@@ -16,12 +16,29 @@ export default function ChatContainer() {
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     const handleKeyPress = (e: globalThis.KeyboardEvent) => {
-      if (e.key === "/" && document.activeElement !== inputRef.current) {
+      const target = e.target as HTMLElement;
+      const isInInput =
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA";
+
+      console.log("Key pressed:", e.key);
+      console.log("Target element:", target.tagName);
+      console.log("Is in input:", isInInput);
+      console.log("Input ref exists:", !!inputRef.current);
+
+      if (e.key === "/" && !isInInput) {
         e.preventDefault();
-        inputRef.current?.focus();
+        if (inputRef.current) {
+          console.log("Focusing input");
+          inputRef.current.focus();
+          const input = inputRef.current as HTMLInputElement;
+          if (input.value === "/") {
+            input.value = "";
+          }
+        }
       }
     };
 
@@ -45,44 +62,69 @@ export default function ChatContainer() {
   }, []);
 
   const handleSend = async (content: string) => {
-    if (!apiKey) return;
-
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
+    if (isGenerating) {
+      abortControllerRef.current?.abort();
       abortControllerRef.current = null;
+      setIsGenerating(false);
+      setIsLoading(false);
+      setMessages((prev) =>
+        prev.filter(
+          (msg, index, arr) =>
+            !(
+              index === arr.length - 1 &&
+              msg.role === "assistant" &&
+              !msg.content
+            )
+        )
+      );
     }
+
+    if (!apiKey) return;
 
     const userMessage: Message = { role: "user", content };
     const aiMessage: Message = { role: "assistant", content: "" };
 
-    setMessages((prev) => [...prev, userMessage, aiMessage]);
-    setIsLoading(true);
-
-    abortControllerRef.current = new AbortController();
-
-    try {
-      const currentMessages = messages.filter(
+    setMessages((prevMessages) => {
+      const currentMessages = prevMessages.filter(
         (msg) =>
           msg.role === "user" || (msg.role === "assistant" && msg.content)
       );
 
-      await streamChat(
-        apiKey,
-        [...currentMessages, userMessage],
-        updateMessage,
-        abortControllerRef.current.signal
-      );
-    } catch (err) {
-      console.error("Chat error:", err);
-      if (err instanceof Error && err.message.includes("API key")) {
-        clearApiKey();
-        setShowApiKeyInput(true);
-      }
-    } finally {
-      setIsLoading(false);
-      abortControllerRef.current = null;
-      inputRef.current?.focus();
-    }
+      const newMessages = [...currentMessages, userMessage, aiMessage];
+
+      (async () => {
+        setIsGenerating(true);
+        setIsLoading(true);
+
+        abortControllerRef.current = new AbortController();
+
+        try {
+          await streamChat(
+            apiKey,
+            currentMessages.concat(userMessage),
+            updateMessage,
+            abortControllerRef.current.signal
+          );
+        } catch (err) {
+          console.error("Chat error:", err);
+          if (err instanceof Error) {
+            if (err.name === "AbortError") {
+              console.log("Request cancelled");
+            } else if (err.message.includes("API key")) {
+              clearApiKey();
+              setShowApiKeyInput(true);
+            }
+          }
+        } finally {
+          setIsGenerating(false);
+          setIsLoading(false);
+          abortControllerRef.current = null;
+          inputRef.current?.focus();
+        }
+      })();
+
+      return newMessages;
+    });
   };
 
   const handleApiKeySubmit = async (key: string) => {
@@ -146,7 +188,8 @@ export default function ChatContainer() {
       <ChatInput
         ref={inputRef}
         onSend={handleSend}
-        disabled={!apiKey || isLoading}
+        disabled={!apiKey}
+        isGenerating={isGenerating}
       />
       <Settings
         open={showApiKeyInput}
