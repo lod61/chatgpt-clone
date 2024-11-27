@@ -8,6 +8,8 @@ interface ChatInputProps {
   isGenerating?: boolean;
 }
 
+type KeyboardEventElement = HTMLInputElement | HTMLDivElement;
+
 const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
   ({ onSend, disabled, isGenerating }, ref) => {
     const [input, setInput] = React.useState("");
@@ -23,9 +25,7 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
       }
     };
 
-    const handleKeyDown = (
-      e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
+    const handleKeyDown = (e: React.KeyboardEvent<KeyboardEventElement>) => {
       if (e.key === "Enter" && !e.shiftKey && !disabled) {
         e.preventDefault();
         if (input.trim()) {
