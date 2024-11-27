@@ -1,28 +1,65 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
+import eslint from "@eslint/js";
+import tseslint from "@typescript-eslint/eslint-plugin";
+import typescript from "@typescript-eslint/parser";
+import reactHooks from "eslint-plugin-react-hooks";
+import react from "eslint-plugin-react";
 
-export default tseslint.config(
-  { ignores: ['dist'] },
+export default [
+  eslint.configs.recommended,
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      parser: typescript,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        window: "readonly",
+        document: "readonly",
+        console: "readonly",
+        localStorage: "readonly",
+        fetch: "readonly",
+        HTMLElement: "readonly",
+        HTMLDivElement: "readonly",
+        HTMLInputElement: "readonly",
+        AbortController: "readonly",
+        AbortSignal: "readonly",
+        TextDecoder: "readonly",
+        NodeJS: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+      },
     },
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      "@typescript-eslint": tseslint,
+      "react-hooks": reactHooks,
+      react: react,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "react/react-in-jsx-scope": "off",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
       ],
+      "no-constant-condition": ["error", { checkLoops: false }],
+      "no-undef": "error",
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
     },
   },
-)
+];

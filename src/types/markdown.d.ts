@@ -1,32 +1,36 @@
+/// <reference types="react" />
+
 declare module 'react-markdown' {
-  import React from 'react'
+  import type { FC, ComponentType } from 'react'
   
   export interface ReactMarkdownProps {
     children: string
-    remarkPlugins?: any[]
+    remarkPlugins?: unknown[]
     components?: {
-      [key: string]: React.ComponentType<any>
+      [key: string]: ComponentType<unknown>
     }
   }
   
-  const ReactMarkdown: React.FC<ReactMarkdownProps>
+  const ReactMarkdown: FC<ReactMarkdownProps>
   export default ReactMarkdown
 }
 
 declare module 'react-syntax-highlighter' {
-  import { CSSProperties } from 'react'
+  import type { CSSProperties, ComponentType, ReactNode, Component } from 'react'
+  import type { JSX } from 'react/jsx-runtime'
   
   export interface SyntaxHighlighterProps {
     children: string
     style?: { [key: string]: CSSProperties }
     language?: string
-    PreTag?: keyof JSX.IntrinsicElements | React.ComponentType<any>
+    PreTag?: keyof JSX.IntrinsicElements | ComponentType<ReactNode>
   }
   
-  export class Prism extends React.Component<SyntaxHighlighterProps> {}
+  export class Prism extends Component<SyntaxHighlighterProps> {}
 }
 
 declare module 'react-syntax-highlighter/dist/esm/styles/prism' {
-  const styles: { [key: string]: { [key: string]: React.CSSProperties } }
+  import type { CSSProperties } from 'react'
+  const styles: { [key: string]: { [key: string]: CSSProperties } }
   export const oneDark: typeof styles
 } 

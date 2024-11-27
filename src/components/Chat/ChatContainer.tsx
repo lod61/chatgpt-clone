@@ -1,102 +1,113 @@
-import React, { useRef, useCallback, useState } from 'react'
-import { Box, IconButton } from '@mui/material'
-import { Settings as SettingsIcon } from '@mui/icons-material'
-import { Message } from '@/types/chat'
-import ChatHistory from './ChatHistory'
-import ChatInput from './ChatInput'
-import Settings from '../Settings/Settings'
-import { useApiKey } from '@/hooks/useApiKey'
-import { streamChat } from '@/services/api'
+import { useState, useRef, useCallback, useEffect } from "react";
+import { Box, IconButton } from "@mui/material";
+import { Settings as SettingsIcon } from "@mui/icons-material";
+import { Message } from "@/types/chat";
+import ChatHistory from "./ChatHistory";
+import ChatInput from "./ChatInput";
+import Settings from "../Settings/Settings";
+import { useApiKey } from "@/hooks/useApiKey";
+import { streamChat } from "@/services/api";
 
 export default function ChatContainer() {
-  const [messages, setMessages] = useState<Message[]>([])
-  const { apiKey, error, isValidating, validateApiKey, clearApiKey } = useApiKey()
-  const [showApiKeyInput, setShowApiKeyInput] = useState(!apiKey)
-  const [isLoading, setIsLoading] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const abortControllerRef = useRef<AbortController | null>(null)
-  const currentMessageRef = useRef<Message | null>(null)
+  const [messages, setMessages] = useState<Message[]>([]);
+  const { apiKey, error, isValidating, validateApiKey, clearApiKey } =
+    useApiKey();
+  const [showApiKeyInput, setShowApiKeyInput] = useState(!apiKey);
+  const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    const handleKeyPress = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "/" && document.activeElement !== inputRef.current) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
+  }, []);
 
   const updateMessage = useCallback((content: string) => {
-    setMessages(prev => {
-      const newMessages = [...prev]
-      const lastMessage = newMessages[newMessages.length - 1]
-      if (lastMessage && lastMessage.role === 'assistant') {
+    setMessages((prev) => {
+      const newMessages = [...prev];
+      const lastMessage = newMessages[newMessages.length - 1];
+      if (lastMessage && lastMessage.role === "assistant") {
         newMessages[newMessages.length - 1] = {
           ...lastMessage,
-          content: lastMessage.content + content
-        }
-        return newMessages
+          content: lastMessage.content + content,
+        };
+        return newMessages;
       }
-      return prev
-    })
-  }, [])
+      return prev;
+    });
+  }, []);
 
   const handleSend = async (content: string) => {
-    if (!apiKey) return
+    if (!apiKey) return;
 
     if (abortControllerRef.current) {
-      abortControllerRef.current.abort()
-      abortControllerRef.current = null
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
     }
 
-    const userMessage: Message = { role: 'user', content }
-    const aiMessage: Message = { role: 'assistant', content: '' }
+    const userMessage: Message = { role: "user", content };
+    const aiMessage: Message = { role: "assistant", content: "" };
 
-    setMessages(prev => [...prev, userMessage, aiMessage])
-    setIsLoading(true)
+    setMessages((prev) => [...prev, userMessage, aiMessage]);
+    setIsLoading(true);
 
-    abortControllerRef.current = new AbortController()
+    abortControllerRef.current = new AbortController();
 
     try {
-      const currentMessages = messages.filter(msg => 
-        msg.role === 'user' || (msg.role === 'assistant' && msg.content)
-      )
-      
+      const currentMessages = messages.filter(
+        (msg) =>
+          msg.role === "user" || (msg.role === "assistant" && msg.content)
+      );
+
       await streamChat(
         apiKey,
         [...currentMessages, userMessage],
         updateMessage,
         abortControllerRef.current.signal
-      )
+      );
     } catch (err) {
-      console.error('Chat error:', err)
-      if (err instanceof Error && err.message.includes('API key')) {
-        clearApiKey()
-        setShowApiKeyInput(true)
+      console.error("Chat error:", err);
+      if (err instanceof Error && err.message.includes("API key")) {
+        clearApiKey();
+        setShowApiKeyInput(true);
       }
     } finally {
-      setIsLoading(false)
-      abortControllerRef.current = null
-      inputRef.current?.focus()
+      setIsLoading(false);
+      abortControllerRef.current = null;
+      inputRef.current?.focus();
     }
-  }
+  };
 
   const handleApiKeySubmit = async (key: string) => {
-    const isValid = await validateApiKey(key)
+    const isValid = await validateApiKey(key);
     if (isValid) {
-      setShowApiKeyInput(false)
-      inputRef.current?.focus()
+      setShowApiKeyInput(false);
+      inputRef.current?.focus();
     }
-  }
+  };
 
   const handleEdit = async (index: number, newContent: string) => {
     if (abortControllerRef.current) {
-      abortControllerRef.current.abort()
-      abortControllerRef.current = null
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
     }
 
-    const newMessages = [...messages]
-    newMessages[index] = { ...newMessages[index], content: newContent }
-    
-    newMessages.splice(index + 1)
-    setMessages(newMessages)
+    const newMessages = [...messages];
+    newMessages[index] = { ...newMessages[index], content: newContent };
 
-    const aiMessage: Message = { role: 'assistant', content: '' }
-    setMessages(prev => [...newMessages, aiMessage])
-    setIsLoading(true)
+    newMessages.splice(index + 1);
+    const aiMessage: Message = { role: "assistant", content: "" };
+    setMessages((_prev) => [...newMessages, aiMessage]);
+    setIsLoading(true);
 
-    abortControllerRef.current = new AbortController()
+    abortControllerRef.current = new AbortController();
 
     try {
       await streamChat(
@@ -104,41 +115,38 @@ export default function ChatContainer() {
         newMessages,
         updateMessage,
         abortControllerRef.current.signal
-      )
+      );
     } catch (err) {
       if (err instanceof Error) {
-        if (err.name === 'AbortError') {
-          console.log('Request cancelled')
-        } else if (err.message.includes('API key')) {
-          clearApiKey()
-          setShowApiKeyInput(true)
+        if (err.name === "AbortError") {
+          console.log("Request cancelled");
+        } else if (err.message.includes("API key")) {
+          clearApiKey();
+          setShowApiKeyInput(true);
         }
       }
     } finally {
-      setIsLoading(false)
-      abortControllerRef.current = null
-      inputRef.current?.focus()
+      setIsLoading(false);
+      abortControllerRef.current = null;
+      inputRef.current?.focus();
     }
-  }
+  };
 
   return (
     <Box
       sx={{
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        bgcolor: '#343541',
-        position: 'relative',
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        bgcolor: "#343541",
+        position: "relative",
       }}
     >
-      <ChatHistory 
-        messages={messages} 
-        onEdit={(index, content) => handleEdit(index, content)}
-      />
-      <ChatInput 
+      <ChatHistory messages={messages} onEdit={handleEdit} />
+      <ChatInput
         ref={inputRef}
-        onSend={handleSend} 
-        disabled={!apiKey || isLoading} 
+        onSend={handleSend}
+        disabled={!apiKey || isLoading}
       />
       <Settings
         open={showApiKeyInput}
@@ -151,10 +159,10 @@ export default function ChatContainer() {
         <IconButton
           onClick={() => setShowApiKeyInput(true)}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             top: 16,
             right: 16,
-            color: '#ECECF1',
+            color: "#ECECF1",
           }}
         >
           <SettingsIcon />
@@ -163,25 +171,25 @@ export default function ChatContainer() {
       {isLoading && (
         <Box
           sx={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
             right: 0,
             height: 2,
-            bgcolor: 'primary.main',
+            bgcolor: "primary.main",
             zIndex: 9999,
-            animation: 'progress 1s infinite linear',
-            '@keyframes progress': {
-              '0%': {
-                transform: 'translateX(-100%)',
+            animation: "progress 1s infinite linear",
+            "@keyframes progress": {
+              "0%": {
+                transform: "translateX(-100%)",
               },
-              '100%': {
-                transform: 'translateX(100%)',
+              "100%": {
+                transform: "translateX(100%)",
               },
             },
           }}
         />
       )}
     </Box>
-  )
-} 
+  );
+}
