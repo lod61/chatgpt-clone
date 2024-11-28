@@ -1,7 +1,9 @@
+import { logger } from "@/utils/logger";
+
 /**
  * OpenRouter API 配置
  */
-const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
+const API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 /**
  * 验证 API key 是否有效
@@ -11,31 +13,31 @@ const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 export async function validateApiKey(apiKey: string): Promise<boolean> {
   try {
     const response = await fetch(API_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': window.location.origin,
-        'X-Title': 'ChatGPT Clone',
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+        "HTTP-Referer": window.location.origin,
+        "X-Title": "ChatGPT Clone",
       },
       body: JSON.stringify({
-        model: 'openai/gpt-3.5-turbo-1106',
-        messages: [{ role: 'user', content: 'Hi' }],
+        model: "openai/gpt-3.5-turbo-1106",
+        messages: [{ role: "user", content: "Hi" }],
         temperature: 0.7,
         max_tokens: 150,
         stream: false,
       }),
-    })
+    });
 
     if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.error?.message || 'Invalid API key')
+      const error = await response.json();
+      throw new Error(error.error?.message || "Invalid API key");
     }
 
-    return true
+    return true;
   } catch (error) {
-    console.error('API key validation error:', error)
-    throw error
+    logger.error("API key validation error:", error);
+    throw error;
   }
 }
 
@@ -50,73 +52,73 @@ export async function streamChat(
   apiKey: string,
   messages: { role: string; content: string }[],
   onChunk: (chunk: string) => void,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<void> {
   try {
     const response = await fetch(API_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': window.location.origin,
-        'X-Title': 'ChatGPT Clone',
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+        "HTTP-Referer": window.location.origin,
+        "X-Title": "ChatGPT Clone",
       },
       body: JSON.stringify({
-        model: 'openai/gpt-3.5-turbo-1106',
+        model: "openai/gpt-3.5-turbo-1106",
         messages: [
           {
-            role: 'system',
-            content: '你是一个专业的AI助手，请直接回答问题，避免重复内容。'
+            role: "system",
+            content: "你是一个专业的AI助手，请直接回答问题，避免重复内容。",
           },
-          ...messages
+          ...messages,
         ],
         stream: true,
         temperature: 0.7,
         max_tokens: 4096,
       }),
       signal,
-    })
+    });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => null)
-      const errorMessage = errorData?.error?.message || `HTTP error! status: ${response.status}`
-      console.error('API Error:', errorData)
-      throw new Error(errorMessage)
+      const errorData = await response.json().catch(() => null);
+      const errorMessage = errorData?.error?.message || `HTTP error! status: ${response.status}`;
+      logger.error("API Error:", errorData);
+      throw new Error(errorMessage);
     }
 
-    const reader = response.body?.getReader()
+    const reader = response.body?.getReader();
     if (!reader) {
-      throw new Error('No response body')
+      throw new Error("No response body");
     }
 
-    const decoder = new TextDecoder()
-    let buffer = ''
+    const decoder = new TextDecoder();
+    let buffer = "";
 
     try {
       while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
+        const { done, value } = await reader.read();
+        if (done) break;
 
         // 解码新的数据块并添加到缓冲区
-        buffer += decoder.decode(value, { stream: true })
+        buffer += decoder.decode(value, { stream: true });
 
         // 处理完整的行
-        const lines = buffer.split('\n')
-        buffer = lines.pop() || '' // 保留最后一个不完整的行
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || ""; // 保留最后一个不完整的行
 
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6)
-            if (data === '[DONE]') continue
+          if (line.startsWith("data: ")) {
+            const data = line.slice(6);
+            if (data === "[DONE]") continue;
 
             try {
-              const parsed = JSON.parse(data)
-              const content = parsed.choices[0]?.delta?.content
+              const parsed = JSON.parse(data);
+              const content = parsed.choices[0]?.delta?.content;
               if (content) {
-                onChunk(content)
+                onChunk(content);
               }
             } catch (e) {
-              console.error('Failed to parse chunk:', e)
+              logger.error("Failed to parse chunk:", e);
             }
           }
         }
@@ -125,29 +127,29 @@ export async function streamChat(
       // 确保处理缓冲区中的最后一行
       if (buffer) {
         try {
-          if (buffer.startsWith('data: ')) {
-            const data = buffer.slice(6)
-            if (data !== '[DONE]') {
-              const parsed = JSON.parse(data)
-              const content = parsed.choices[0]?.delta?.content
+          if (buffer.startsWith("data: ")) {
+            const data = buffer.slice(6);
+            if (data !== "[DONE]") {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices[0]?.delta?.content;
               if (content) {
-                onChunk(content)
+                onChunk(content);
               }
             }
           }
         } catch (e) {
-          console.error('Failed to parse final chunk:', e)
+          logger.error("Failed to parse final chunk:", e);
         }
       }
     }
   } catch (error) {
     if (error instanceof Error) {
-      if (error.name === 'AbortError') {
-        console.log('Request cancelled')
-        return
+      if (error.name === "AbortError") {
+        logger.info("Request cancelled");
+        return;
       }
-      throw error
+      throw error;
     }
-    throw new Error('Unknown error occurred')
+    throw new Error("Unknown error occurred");
   }
 } 

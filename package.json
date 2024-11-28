@@ -41,13 +41,13 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
+    "prettier": "^3.4.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   }
 }

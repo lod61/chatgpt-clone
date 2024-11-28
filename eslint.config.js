@@ -24,6 +24,7 @@ export default [
         window: "readonly",
         document: "readonly",
         console: "readonly",
+        process: true,
         localStorage: "readonly",
         fetch: "readonly",
         HTMLElement: "readonly",
@@ -43,39 +44,37 @@ export default [
       react: react,
     },
     rules: {
-      "no-console": "warn",
+      "no-console": "off",
       "no-debugger": "warn",
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["warn", { 
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_" 
-      }],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
       "react/react-in-jsx-scope": "off",
-      "react/prop-types": "off",
-      "indent": ["error", 2, { "SwitchCase": 1 }],
-      "linebreak-style": ["error", "unix"],
-      "quotes": ["error", "double"],
-      "semi": ["error", "always"],
-      "comma-dangle": ["error", "always-multiline"],
-      "arrow-parens": ["error", "always"],
-      "object-curly-spacing": ["error", "always"],
-      "array-bracket-spacing": ["error", "never"],
-      "max-len": ["warn", { 
-        "code": 100,
-        "ignoreStrings": true,
-        "ignoreTemplateLiterals": true,
-        "ignoreComments": true
-      }],
-      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-empty-interface": "off",
       "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-non-null-assertion": "warn",
-      "@typescript-eslint/no-empty-interface": "warn",
+      "no-constant-condition": ["error", { checkLoops: false }],
+      indent: ["error", 2, { SwitchCase: 1 }],
+      quotes: ["error", "double"],
+      semi: ["error", "always"],
+      "comma-dangle": ["error", "always-multiline"],
+      "no-undef": "off",
     },
     settings: {
       react: {
         version: "detect",
+      },
+      "import/resolver": {
+        typescript: {
+          alwaysTryTypes: true,
+        },
       },
     },
   },

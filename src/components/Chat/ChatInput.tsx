@@ -24,7 +24,7 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
     };
 
     const handleKeyDown = (
-      e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+      e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
     ) => {
       if (e.key === "Enter" && !e.shiftKey && !disabled) {
         e.preventDefault();
@@ -122,7 +122,7 @@ const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(
         </Box>
       </Box>
     );
-  }
+  },
 );
 
 ChatInput.displayName = "ChatInput";

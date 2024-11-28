@@ -1,6 +1,7 @@
 import { useApiKey } from "@/hooks/useApiKey";
 import { streamChat } from "@/services/api";
 import { Message } from "@/types/chat";
+import { logger } from "@/utils/logger";
 import { Settings as SettingsIcon } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -23,15 +24,15 @@ export default function ChatContainer() {
       const isInInput =
         target.tagName === "INPUT" || target.tagName === "TEXTAREA";
 
-      console.log("Key pressed:", e.key);
-      console.log("Target element:", target.tagName);
-      console.log("Is in input:", isInInput);
-      console.log("Input ref exists:", !!inputRef.current);
+      logger.log("Key pressed:", e.key);
+      logger.log("Target element:", target.tagName);
+      logger.log("Is in input:", isInInput);
+      logger.log("Input ref exists:", !!inputRef.current);
 
       if (e.key === "/" && !isInInput) {
         e.preventDefault();
         if (inputRef.current) {
-          console.log("Focusing input");
+          logger.log("Focusing input");
           inputRef.current.focus();
           const input = inputRef.current as HTMLInputElement;
           if (input.value === "/") {
@@ -72,8 +73,8 @@ export default function ChatContainer() {
               index === arr.length - 1 &&
               msg.role === "assistant" &&
               !msg.content
-            )
-        )
+            ),
+        ),
       );
     }
 
@@ -85,7 +86,7 @@ export default function ChatContainer() {
     setMessages((prevMessages) => {
       const currentMessages = prevMessages.filter(
         (msg) =>
-          msg.role === "user" || (msg.role === "assistant" && msg.content)
+          msg.role === "user" || (msg.role === "assistant" && msg.content),
       );
 
       const newMessages = [...currentMessages, userMessage, aiMessage];
@@ -100,13 +101,13 @@ export default function ChatContainer() {
             apiKey,
             currentMessages.concat(userMessage),
             updateMessage,
-            abortControllerRef.current.signal
+            abortControllerRef.current.signal,
           );
         } catch (err) {
-          console.error("Chat error:", err);
+          logger.error("Chat error:", err);
           if (err instanceof Error) {
             if (err.name === "AbortError") {
-              console.log("Request cancelled");
+              logger.log("Request cancelled");
             } else if (err.message.includes("API key")) {
               clearApiKey();
               setShowApiKeyInput(true);
@@ -141,13 +142,13 @@ export default function ChatContainer() {
     const originalMessage = newMessages[index];
     
     if (!originalMessage) {
-      console.error('Message not found at index:', index);
+      logger.error("Message not found at index:", index);
       return;
     }
 
     newMessages[index] = {
       role: originalMessage.role,
-      content: newContent
+      content: newContent,
     };
 
     newMessages.splice(index + 1);
@@ -162,12 +163,12 @@ export default function ChatContainer() {
         apiKey!,
         newMessages,
         updateMessage,
-        abortControllerRef.current.signal
+        abortControllerRef.current.signal,
       );
     } catch (err) {
       if (err instanceof Error) {
         if (err.name === "AbortError") {
-          console.log("Request cancelled");
+          logger.log("Request cancelled");
         } else if (err.message.includes("API key")) {
           clearApiKey();
           setShowApiKeyInput(true);

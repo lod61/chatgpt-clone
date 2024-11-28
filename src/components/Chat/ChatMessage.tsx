@@ -162,7 +162,7 @@ const ChatMessage = memo(({ message, onEdit }: ChatMessageProps) => {
                       counterIncrement: "item",
                       display: "flex",
                       "&::before": {
-                        content: 'counter(item) "."',
+                        content: "counter(item) \".\"",
                         fontWeight: 600,
                         minWidth: "1.5em",
                       },

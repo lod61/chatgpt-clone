@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -9,7 +9,7 @@ import {
   Alert,
   CircularProgress,
   Link,
-} from '@mui/material'
+} from "@mui/material";
 
 interface ApiKeyInputProps {
   open: boolean
@@ -24,16 +24,16 @@ export default function ApiKeyInput({
   onClose, 
   onSubmit, 
   error,
-  isValidating = false 
+  isValidating = false, 
 }: ApiKeyInputProps) {
-  const [apiKey, setApiKey] = useState('')
+  const [apiKey, setApiKey] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (apiKey.trim()) {
-      onSubmit(apiKey.trim())
+      onSubmit(apiKey.trim());
     }
-  }
+  };
 
   return (
     <Dialog 
@@ -59,11 +59,11 @@ export default function ApiKeyInput({
             disabled={isValidating}
             helperText={
               <span>
-                Visit{' '}
+                Visit{" "}
                 <Link href="https://openrouter.ai/keys" target="_blank" rel="noopener">
                   openrouter.ai
                 </Link>
-                {' '}to get your API key
+                {" "}to get your API key
               </span>
             }
           />
@@ -76,10 +76,10 @@ export default function ApiKeyInput({
             startIcon={isValidating ? <CircularProgress size={20} /> : null}
             fullWidth
           >
-            {isValidating ? 'Validating...' : 'Submit'}
+            {isValidating ? "Validating..." : "Submit"}
           </Button>
         </DialogActions>
       </form>
     </Dialog>
-  )
+  );
 } 

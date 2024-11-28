@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Dialog,
   DialogTitle,
@@ -11,7 +11,7 @@ import {
   Link,
   Box,
   Typography,
-} from '@mui/material'
+} from "@mui/material";
 
 interface SettingsProps {
   open: boolean
@@ -28,14 +28,14 @@ export default function Settings({
   error,
   isValidating = false,
 }: SettingsProps) {
-  const [apiKey, setApiKey] = React.useState('')
+  const [apiKey, setApiKey] = React.useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (apiKey.trim()) {
-      onSubmit(apiKey.trim())
+      onSubmit(apiKey.trim());
     }
-  }
+  };
 
   return (
     <Dialog
@@ -45,14 +45,14 @@ export default function Settings({
       fullWidth
       PaperProps={{
         sx: {
-          bgcolor: '#2D2D2D',
-          color: '#ECECF1',
+          bgcolor: "#2D2D2D",
+          color: "#ECECF1",
           borderRadius: 2,
         },
       }}
     >
       <form onSubmit={handleSubmit}>
-        <DialogTitle sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <DialogTitle sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Typography variant="h6">API Key Settings</Typography>
         </DialogTitle>
         <DialogContent sx={{ mt: 2 }}>
@@ -61,10 +61,10 @@ export default function Settings({
               severity="error" 
               sx={{ 
                 mb: 2,
-                bgcolor: 'rgba(255,0,0,0.1)',
-                color: '#ff6b6b',
-                '& .MuiAlert-icon': {
-                  color: '#ff6b6b',
+                bgcolor: "rgba(255,0,0,0.1)",
+                color: "#ff6b6b",
+                "& .MuiAlert-icon": {
+                  color: "#ff6b6b",
                 },
               }}
             >
@@ -72,13 +72,13 @@ export default function Settings({
             </Alert>
           )}
           <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
-              Enter your OpenRouter API key to start chatting. You can get one from{' '}
+            <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
+              Enter your OpenRouter API key to start chatting. You can get one from{" "}
               <Link 
                 href="https://openrouter.ai/keys" 
                 target="_blank" 
                 rel="noopener"
-                sx={{ color: '#7C7CFF' }}
+                sx={{ color: "#7C7CFF" }}
               >
                 openrouter.ai
               </Link>
@@ -94,20 +94,20 @@ export default function Settings({
             required
             disabled={isValidating}
             sx={{
-              '& .MuiOutlinedInput-root': {
-                color: '#ECECF1',
-                '& fieldset': {
-                  borderColor: 'rgba(255,255,255,0.2)',
+              "& .MuiOutlinedInput-root": {
+                color: "#ECECF1",
+                "& fieldset": {
+                  borderColor: "rgba(255,255,255,0.2)",
                 },
-                '&:hover fieldset': {
-                  borderColor: 'rgba(255,255,255,0.3)',
+                "&:hover fieldset": {
+                  borderColor: "rgba(255,255,255,0.3)",
                 },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#7C7CFF',
+                "&.Mui-focused fieldset": {
+                  borderColor: "#7C7CFF",
                 },
               },
-              '& .MuiInputLabel-root': {
-                color: 'rgba(255,255,255,0.7)',
+              "& .MuiInputLabel-root": {
+                color: "rgba(255,255,255,0.7)",
               },
             }}
           />
@@ -120,23 +120,23 @@ export default function Settings({
             fullWidth
             sx={{
               height: 44,
-              bgcolor: '#7C7CFF',
-              '&:hover': {
-                bgcolor: '#6B6BE5',
+              bgcolor: "#7C7CFF",
+              "&:hover": {
+                bgcolor: "#6B6BE5",
               },
-              '&.Mui-disabled': {
-                bgcolor: 'rgba(124,124,255,0.3)',
+              "&.Mui-disabled": {
+                bgcolor: "rgba(124,124,255,0.3)",
               },
             }}
           >
             {isValidating ? (
-              <CircularProgress size={24} sx={{ color: '#ECECF1' }} />
+              <CircularProgress size={24} sx={{ color: "#ECECF1" }} />
             ) : (
-              'Save API Key'
+              "Save API Key"
             )}
           </Button>
         </DialogActions>
       </form>
     </Dialog>
-  )
+  );
 } 

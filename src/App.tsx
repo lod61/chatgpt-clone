@@ -17,7 +17,7 @@ function App() {
       divider: "rgba(0,0,0,0.1)",
     },
     typography: {
-      fontFamily: 'Söhne,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,"Noto Color Emoji"',
+      fontFamily: "Söhne,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,\"Noto Color Emoji\"",
     },
   });
 
