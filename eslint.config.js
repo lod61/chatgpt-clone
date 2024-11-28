@@ -8,12 +8,7 @@ export default [
   eslint.configs.recommended,
   {
     files: ["**/*.{ts,tsx}"],
-    ignores: [
-      "vite.config.ts",
-      "dist/**/*",
-      "build/**/*",
-      "node_modules/**/*"
-    ],
+    ignores: ["dist/**", "build/**", "node_modules/**"],
     languageOptions: {
       parser: typescript,
       parserOptions: {
@@ -48,21 +43,35 @@ export default [
       react: react,
     },
     rules: {
+      "no-console": "warn",
+      "no-debugger": "warn",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["warn", { 
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_" 
+      }],
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
       "react/react-in-jsx-scope": "off",
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          ignoreRestSiblings: true,
-        },
-      ],
-      "no-constant-condition": ["error", { checkLoops: false }],
-      "no-undef": "error",
+      "react/prop-types": "off",
+      "indent": ["error", 2, { "SwitchCase": 1 }],
+      "linebreak-style": ["error", "unix"],
+      "quotes": ["error", "double"],
+      "semi": ["error", "always"],
+      "comma-dangle": ["error", "always-multiline"],
+      "arrow-parens": ["error", "always"],
+      "object-curly-spacing": ["error", "always"],
+      "array-bracket-spacing": ["error", "never"],
+      "max-len": ["warn", { 
+        "code": 100,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreComments": true
+      }],
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-non-null-assertion": "warn",
+      "@typescript-eslint/no-empty-interface": "warn",
     },
     settings: {
       react: {
